@@ -13,13 +13,9 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   TextEditingController firstNameController = new TextEditingController();
-
   TextEditingController lastNameController = new TextEditingController();
-
   TextEditingController emailController = new TextEditingController();
-
   TextEditingController passwordController = new TextEditingController();
-
   TextEditingController cpasswordController = new TextEditingController();
 
   @override
@@ -35,7 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: SingleChildScrollView(
             child: Container(
                 child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

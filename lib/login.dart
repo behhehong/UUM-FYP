@@ -7,13 +7,15 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +25,20 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Container(
                 child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(
+                  child: Center(
+                    child: Image.asset('assets/images/logo.png', height:250, width: 200, fit: BoxFit.fitHeight),
+                  )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Login",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 40, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -40,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Please sign in to continue"),
+                      const Text("Please sign in to continue"),
                     ],
                   ),
                   Padding(
@@ -49,9 +55,9 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white,
                         child: TextField(
                           controller: emailController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "Email",
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.email,
                                 color: Colors.black,
                               )),
@@ -63,9 +69,9 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white,
                         child: TextField(obscureText: true,
                           controller: passwordController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "Password",
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.security_outlined,
                                 color: Colors.black,
                               )),
@@ -81,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                             elevation: 10,
                             color: Colors.amberAccent,
                             onPressed: () {_userLogin();},
-                            child: Text("Sign In"),
+                            child: const Text("Sign In"),
                           ),
                         )
                       ],
@@ -91,17 +97,17 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         _forgetpassdialog;
                       },
-                      child: Text("Forget Password?")),
+                      child: const Text("Forget Password?")),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpPage()));
+                              builder: (context) => const SignUpPage()));
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text("No account yet? Sign up now!"),
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: const Text("No account yet? Sign up now!"),
                     ),
                   )
                 ],
@@ -116,8 +122,8 @@ class _LoginPageState extends State<LoginPage> {
   void _forgetpassdialog() {
     showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-              title: Text('Dialog Title'),
+        builder: (_) => const AlertDialog(
+              title: const Text('Dialog Title'),
               content: Text('This is my content'),
             ));
   }
@@ -144,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
         return;
       } else {
         print("Success");
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const HomePage()));
         // List userdata = response.body.split("#");
         // User user = new User(
         //   first_name: userdata[1],

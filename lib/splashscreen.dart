@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_final_year_project/login.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,25 +22,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              Image.asset("assets/images/logo.png"),
-              DefaultTextStyle(
-                style: const TextStyle(fontSize: 20.0, color: Colors.black),
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    WavyAnimatedText('App Name'),
-                    WavyAnimatedText('Getting inside...'),
-                  ],
-                  isRepeatingAnimation: true,
-                ),
-              )
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/cyber.jpg'),
+                      fit: BoxFit.cover))),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0, 50, 0, 10),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text("Cyberform",
+                        style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                    CircularProgressIndicator(),
+                    Text("Version 0.1",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white))
+                  ]))
+        ],
       ),
     );
   }
