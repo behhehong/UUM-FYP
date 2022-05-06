@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final_year_project/homepage.dart';
+import 'package:flutter_final_year_project/views/homepage.dart';
+import 'package:flutter_final_year_project/views/survey1.dart';
 import 'login.dart';
 
 class Survey extends StatefulWidget {
@@ -90,31 +91,30 @@ class _SurveyState extends State<Survey> {
                   alignment: Alignment.topLeft,
                   child: Column(children: [
                     InkWell(
-                        child: Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1565C0),
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text("Survey 1",
-                                style: TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center),
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1565C0),
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
                           ),
                         ),
-                        splashColor: Colors.white,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Survey(),
-                            ),
-                          );
-                        }),
+                        child: const Center(
+                          child: Text("Survey 1",
+                              style: TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                      splashColor: Colors.white,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Survey1(),
+                        ),
+                      ),
+                    ),
                   ]),
                 )
               ],

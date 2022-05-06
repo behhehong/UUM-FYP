@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
-import 'package:flutter_final_year_project/homepage.dart';
-import 'package:flutter_final_year_project/signup.dart';
+import 'package:flutter_final_year_project/views/homepage.dart';
+import 'package:flutter_final_year_project/views/signup.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 

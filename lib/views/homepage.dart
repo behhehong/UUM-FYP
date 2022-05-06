@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final_year_project/login.dart';
-import 'package:flutter_final_year_project/surveypage.dart';
+import 'package:flutter_final_year_project/views/login.dart';
+import 'package:flutter_final_year_project/views/surveypage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
