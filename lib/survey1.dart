@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final_year_project/views/homepage.dart';
-import 'package:flutter_final_year_project/views/questionpage.dart';
-import 'package:flutter_final_year_project/views/surveypage.dart';
+import 'package:flutter_final_year_project/homepage.dart';
+import 'package:flutter_final_year_project/questionpage.dart';
+import 'package:flutter_final_year_project/surveypage.dart';
 
 class Survey1 extends StatefulWidget {
   const Survey1({Key? key}) : super(key: key);

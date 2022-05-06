@@ -12,12 +12,12 @@ class Survey1Ques extends StatefulWidget {
 }
 
 class _Survey1QuesState extends State<Survey1Ques> {
+  var currentStep = 1;
+  var number = 1;
+  int groupValue = 0;
+
   @override
   Widget build(BuildContext context) {
-    var currentStep = 1;
-    var number = 1;
-    bool pressAttention = false;
-
     return MaterialApp(
       title: 'Material App',
       home: Scaffold(
@@ -64,19 +64,74 @@ class _Survey1QuesState extends State<Survey1Ques> {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "What is your name?",
+                    "Password doesn't follow keyboard pattern",
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 180),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  child: Container(
+                    color: const Color(0xFFE0E0E0),
+                    child: Row(
+                      children: [
+                        Theme(
+                          data: ThemeData(
+                            unselectedWidgetColor: Colors.white,
+                          ),
+                          child: Radio(
+                            onChanged: (e) => something(e as int),
+                            activeColor: Colors.blue,
+                            value: 1,
+                            groupValue: groupValue,
+                          ),
+                        ),
+                        const Text("Agree")
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  child: Container(
+                    color: const Color(0xFFE0E0E0),
+                    child: Row(
+                      children: [
+                        Theme(
+                          data: ThemeData(
+                            unselectedWidgetColor: Colors.white,
+                          ),
+                          child: Radio(
+                            onChanged: (e) => something(e as int),
+                            activeColor: Colors.blue,
+                            value: 2,
+                            groupValue: groupValue,
+                          ),
+                        ),
+                        const Text("Disagree")
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void something(int e) {
+    setState(() {
+      if (e == 1) {
+        groupValue = 1;
+      } else if (e == 2) {
+        groupValue = 2;
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final_year_project/views/homepage.dart';
-import 'package:flutter_final_year_project/views/survey1.dart';
+import 'package:flutter_final_year_project/homepage.dart';
+import 'package:flutter_final_year_project/survey1.dart';
 import 'login.dart';
 
 class Survey extends StatefulWidget {
