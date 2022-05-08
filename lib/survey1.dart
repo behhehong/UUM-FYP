@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_final_year_project/homepage.dart';
-import 'package:flutter_final_year_project/questionpage.dart';
+import 'package:flutter_final_year_project/survey1ques.dart';
 import 'package:flutter_final_year_project/surveypage.dart';
 
 class Survey1 extends StatefulWidget {
@@ -30,24 +29,32 @@ class _Survey1State extends State<Survey1> {
         ),
         body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const SizedBox(height: 15),
             const Text(
               "Welcome to Survey 1",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             ElevatedButton(
-                onPressed: () => const QuestionPage(),
-                child: const Text("Start"),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const Survey1Ques()));
+                },
+                child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 30),
+                    child: const Text("Start", style: TextStyle(fontSize: 15))),
                 style:
                     ElevatedButton.styleFrom(primary: const Color(0xFF1565C0))),
             const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  showAlertDialog2(context);
+                  defaultDialog(context);
                 },
-                child: const Text("Description"),
+                child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 30),
+                    child: const Text("Description",
+                        style: TextStyle(fontSize: 15))),
                 style:
                     ElevatedButton.styleFrom(primary: const Color(0xFF1565C0))),
           ]),
@@ -57,7 +64,7 @@ class _Survey1State extends State<Survey1> {
   }
 }
 
-showAlertDialog2(BuildContext context) async {
+defaultDialog(BuildContext context) async {
   // set up the button
   Widget okButton = TextButton(
     child: const Text("OK"),

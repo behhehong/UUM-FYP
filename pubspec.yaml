@@ -40,6 +40,7 @@ dependencies:
   email_validator: ^2.0.1
   progress_indicator: ^0.2.2
   linear_progress_bar: ^1.1.0
+  get_state_manager: ^3.13.0
 
 dev_dependencies:
   flutter_test:
