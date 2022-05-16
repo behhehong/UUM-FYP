@@ -38,9 +38,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Create Account",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 40, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -51,9 +51,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Colors.white,
                         child: TextField(
                           controller: firstNameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "First Name",
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.person,
                                 color: Colors.black,
                               )),
@@ -65,7 +65,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Colors.white,
                         child: TextField(
                           controller: lastNameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "Last Name",
                               icon: Icon(
                                 Icons.person,
@@ -79,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Colors.white,
                         child: TextField(
                           controller: emailController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "Email",
                               icon: Icon(
                                 Icons.email,
@@ -94,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: TextField(
                           obscureText: true,
                           controller: passwordController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "Password",
                               icon: Icon(
                                 Icons.security_outlined,
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: TextField(
                           obscureText: true,
                           controller: cpasswordController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               labelText: "Confirm Password",
                               icon: Icon(
                                 Icons.security_outlined,
@@ -122,14 +122,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                          child: MaterialButton(
-                            elevation: 10,
-                            color: Colors.amberAccent,
-                            onPressed: () {
-                              _userSignUp();
-                            },
-                            child: Text("Sign Up"),
+                        MaterialButton(
+                          elevation: 10,
+                          color: const Color(0xFF1565C0),
+                          onPressed: () {
+                            _userSignUp();
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(color: Colors.white),
                           ),
                         )
                       ],
@@ -137,11 +138,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
                       child: Text("Already have an account? Sign in now!"),
                     ),
                   )
@@ -195,8 +198,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 backgroundColor: Colors.white,
                 textColor: Colors.black,
                 fontSize: 16.0);
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()));
             // List userdata = response.body.split("#");
             // User user = new User(
             //   first_name: userdata[1],

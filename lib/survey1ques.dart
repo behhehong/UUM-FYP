@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/models/questionmodel.dart';
+import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/result.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 
 import 'data/data.dart';
 
-void main() => runApp(const Survey1Ques());
-
 class Survey1Ques extends StatefulWidget {
-  const Survey1Ques({Key? key}) : super(key: key);
+  final User user;
+
+  const Survey1Ques({Key? key, required this.user}) : super(key: key);
 
   @override
   State<Survey1Ques> createState() => _Survey1QuesState();
@@ -41,62 +43,76 @@ class _Survey1QuesState extends State<Survey1Ques> {
       home: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Survey 1',
-              style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            title: Text(
+              'SURVEY 1',
+              style: GoogleFonts.roboto(
+                textStyle: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
+            flexibleSpace: const Image(
+              image: AssetImage('assets/images/plain.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
-          body: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: Center(
-              child: Column(
-                children: [
-                  const SizedBox(height: 15),
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: LinearProgressBar(
-                      maxSteps: _questions.length,
-                      progressType: LinearProgressBar.progressTypeLinear,
-                      currentStep: index + 1,
-                      progressColor: Colors.deepOrange,
-                      backgroundColor: Colors.grey,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.deepOrange),
-                      semanticsLabel: "Label",
-                      semanticsValue: "Value",
-                      minHeight: 5,
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/plain.jpg"),
+                  fit: BoxFit.cover),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: LinearProgressBar(
+                        maxSteps: _questions.length,
+                        progressType: LinearProgressBar.progressTypeLinear,
+                        currentStep: index + 1,
+                        progressColor: const Color(0xFF1565C0),
+                        backgroundColor: Colors.grey,
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.blue),
+                        semanticsLabel: "Label",
+                        semanticsValue: "Value",
+                        minHeight: 5,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Question ${index + 1}",
-                      style: const TextStyle(fontSize: 15, color: Colors.grey),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Question ${index + 1}",
+                        style:
+                            const TextStyle(fontSize: 15, color: Colors.grey),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      _questions[index].getQuestion(),
-                      style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _questions[index].getQuestion(),
+                        style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 180),
-                  newMethod(1, "Agree"),
-                  const SizedBox(height: 8),
-                  newMethod(2, "Disagree"),
-                ],
+                    const SizedBox(height: 180),
+                    newMethod(1, "Agree"),
+                    const SizedBox(height: 8),
+                    newMethod(2, "Disagree"),
+                  ],
+                ),
               ),
             ),
           ),
@@ -116,7 +132,6 @@ class _Survey1QuesState extends State<Survey1Ques> {
                         if (index == 0) {
                         } else if (right == 1) {
                           setState(() {
-                            points = points - 20;
                             correct--;
                             index--;
                             groupValue = 0;
@@ -137,7 +152,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                           });
                         } else {
                           setState(() {
-                            missed--;
+                            notAttempted--;
                             index--;
                             groupValue = 0;
                             right = 0;
@@ -166,7 +181,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                         if (_questions[index].getAnswer() == "Agree" &&
                             groupValue == 1) {
                           setState(() {
-                            points = points + 20;
+                            points += 5;
                             correct++;
                             index++;
                             groupValue = 0;
@@ -178,7 +193,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                                 "Disagree" &&
                             groupValue == 2) {
                           setState(() {
-                            points = points + 20;
+                            points += 5;
                             correct++;
                             index++;
                             groupValue = 0;
@@ -209,7 +224,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                         if (_questions[index].getAnswer() == "Agree" &&
                             groupValue == 1) {
                           setState(() {
-                            points = points + 20;
+                            points += 5;
                             correct++;
                             right = 1;
                             wrong = 0;
@@ -220,7 +235,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                                 "Disagree" &&
                             groupValue == 2) {
                           setState(() {
-                            points = points + 20;
+                            points += 5;
                             correct++;
                             right = 1;
                             wrong = 0;
@@ -253,7 +268,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      color: Colors.deepOrange,
+                      color: const Color(0xFF1565C0),
                       child: Text(buttonText,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -287,7 +302,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                 ),
                 child: Radio(
                   onChanged: (e) => something(e as int),
-                  activeColor: Colors.blue,
+                  activeColor: Colors.deepOrange,
                   value: values,
                   groupValue: groupValue,
                 ),
@@ -319,11 +334,13 @@ class _Survey1QuesState extends State<Survey1Ques> {
           context,
           MaterialPageRoute(
             builder: (context) => Result(
-                score: points,
-                totalQuestion: _questions.length,
-                correct: correct,
-                incorrect: incorrect,
-                notAttempted: notAttempted),
+              score: points,
+              totalQuestion: _questions.length,
+              correct: correct,
+              incorrect: incorrect,
+              notAttempted: notAttempted,
+              user: widget.user,
+            ),
           ),
         );
       },

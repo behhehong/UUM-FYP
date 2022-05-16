@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/login.dart';
+import 'package:flutter_final_year_project/models/user.dart';
+import 'package:flutter_final_year_project/profile.dart';
 import 'package:flutter_final_year_project/surveypage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final User user;
+  const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,20 +20,29 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
             backgroundColor: const Color(0xFF1565C0),
             title: const Text('Home Page'),
+            centerTitle: true,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(user: widget.user),
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.person),
               )
             ]),
         drawer: Drawer(
           child: ListView(
             children: [
-              const UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Color(0xFF1565C0)),
-                accountName: Text('Beh He-Hong'),
-                accountEmail: Text('hehongbeh@gmail.com'),
-                currentAccountPicture: CircleAvatar(
+              UserAccountsDrawerHeader(
+                decoration: const BoxDecoration(color: Color(0xFF1565C0)),
+                accountName: Text("${widget.user.last_name.toString()} "
+                    " ${widget.user.first_name.toString()}"),
+                accountEmail: Text(widget.user.email.toString()),
+                currentAccountPicture: const CircleAvatar(
                   backgroundImage: NetworkImage(
                       'https://cdna.artstation.com/p/assets/images/images/033/435/166/medium/rishav-gupta-naruto.jpg?1609603275'),
                 ),
@@ -38,7 +50,14 @@ class _HomePageState extends State<HomePage> {
               createDrawerItem(
                 icon: Icons.home,
                 text: 'Home',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(user: widget.user),
+                    ),
+                  );
+                },
               ),
               createDrawerItem(
                 icon: Icons.history_edu,
@@ -47,7 +66,9 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Survey(),
+                      builder: (context) => Survey(
+                        user: widget.user,
+                      ),
                     ),
                   );
                 },
@@ -55,19 +76,26 @@ class _HomePageState extends State<HomePage> {
               createDrawerItem(
                 icon: Icons.person,
                 text: 'My Profile',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(user: widget.user),
+                    ),
+                  );
+                },
               ),
-              createDrawerItem(
-                icon: Icons.settings,
-                text: 'Settings',
-                onTap: () {},
-              ),
+              // createDrawerItem(
+              //   icon: Icons.settings,
+              //   text: 'Settings',
+              //   onTap: () {},
+              // ),
               createDrawerItem(
                 icon: Icons.logout,
                 text: 'Logout',
                 onTap: () {
                   Navigator.of(context).pop();
-                  showAlertDialog(context);
+                  logOut(context);
                 },
               ),
             ],
@@ -127,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Survey(),
+                              builder: (context) => Survey(user: widget.user),
                             ),
                           );
                         },
@@ -150,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Survey()));
+                              builder: (context) => Survey(user: widget.user)));
                     },
                   ),
                 ),
@@ -179,45 +207,45 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-showAlertDialog(BuildContext context) async {
-    // set up the buttons
-    Widget continueButton = TextButton(
-      child: const Text("Confirm"),
-      onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginPage(),
-          ),
-        );
-      },
-    );
+logOut(BuildContext context) async {
+  // set up the buttons
+  Widget continueButton = TextButton(
+    child: const Text("Confirm"),
+    onPressed: () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+      );
+    },
+  );
 
-    Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
+  Widget cancelButton = TextButton(
+    child: const Text("Cancel"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Text("Logout"),
-      content: const Text("Are you sure you want to logout?"),
-      actions: [
-        continueButton,
-        cancelButton,
-      ],
-    );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: const Text("Logout"),
+    content: const Text("Are you sure you want to logout?"),
+    actions: [
+      continueButton,
+      cancelButton,
+    ],
+  );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
 
 Widget createDrawerItem({
   required IconData icon,

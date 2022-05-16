@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/data/data.dart';
 import 'package:flutter_final_year_project/homepage.dart';
 import 'package:flutter_final_year_project/models/questionmodel.dart';
+import 'package:flutter_final_year_project/models/user.dart';
+import 'package:flutter_final_year_project/profile.dart';
 import 'package:flutter_final_year_project/survey1.dart';
 import 'login.dart';
 
 class Survey extends StatefulWidget {
-  const Survey({Key? key}) : super(key: key);
+  final User user;
+  const Survey({Key? key, required this.user}) : super(key: key);
 
   @override
   State<Survey> createState() => _SurveyState();
@@ -32,11 +35,12 @@ class _SurveyState extends State<Survey> {
         drawer: Drawer(
           child: ListView(
             children: [
-              const UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Color(0xFF1565C0)),
-                accountName: Text('Beh He-Hong'),
-                accountEmail: Text('hehongbeh@gmail.com'),
-                currentAccountPicture: CircleAvatar(
+              UserAccountsDrawerHeader(
+                decoration: const BoxDecoration(color: Color(0xFF1565C0)),
+                accountName: Text("${widget.user.last_name.toString()} "
+                    " ${widget.user.first_name.toString()}"),
+                accountEmail: Text(widget.user.email.toString()),
+                currentAccountPicture: const CircleAvatar(
                   backgroundImage: NetworkImage(
                       'https://cdna.artstation.com/p/assets/images/images/033/435/166/medium/rishav-gupta-naruto.jpg?1609603275'),
                 ),
@@ -48,7 +52,7 @@ class _SurveyState extends State<Survey> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomePage(),
+                      builder: (context) => HomePage(user: widget.user),
                     ),
                   );
                 },
@@ -60,7 +64,7 @@ class _SurveyState extends State<Survey> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Survey(),
+                      builder: (context) => Survey(user: widget.user,),
                     ),
                   );
                 },
@@ -68,19 +72,26 @@ class _SurveyState extends State<Survey> {
               createDrawerItem(
                 icon: Icons.person,
                 text: 'My Profile',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(user: widget.user),
+                    ),
+                  );
+                },
               ),
-              createDrawerItem(
-                icon: Icons.settings,
-                text: 'Settings',
-                onTap: () {},
-              ),
+              // createDrawerItem(
+              //   icon: Icons.settings,
+              //   text: 'Settings',
+              //   onTap: () {},
+              // ),
               createDrawerItem(
                 icon: Icons.logout,
                 text: 'Logout',
                 onTap: () {
                   Navigator.of(context).pop();
-                  showAlertDialog(context);
+                  logOut(context);
                 },
               ),
             ],
@@ -154,7 +165,7 @@ class _SurveyState extends State<Survey> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Survey1()));
+                                      builder: (context) => Survey1(user: widget.user)));
                             },
                             icon:
                                 const Icon(Icons.keyboard_arrow_right_outlined),
@@ -168,7 +179,7 @@ class _SurveyState extends State<Survey> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Survey1(),
+                      builder: (context) => Survey1(user: widget.user),
                     ),
                   ),
                 )

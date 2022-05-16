@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/homepage.dart';
+import 'package:flutter_final_year_project/models/user.dart';
+import 'package:flutter_final_year_project/profile.dart';
 import 'package:flutter_final_year_project/result.dart';
 import 'package:flutter_final_year_project/splashscreen.dart';
 import 'package:flutter_final_year_project/login.dart';
@@ -17,8 +19,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner:false,
-      title: 'Final yp', 
-      home: Survey1Ques());
+        debugShowCheckedModeBanner: false, title: 'Final yp', home: SplashScreen());
   }
 }
