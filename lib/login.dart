@@ -72,12 +72,23 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.white,
                           child: TextFormField(
                             controller: emailController,
-                            decoration: const InputDecoration(
-                                labelText: "Email",
-                                icon: Icon(
-                                  Icons.email,
-                                  color: Colors.black,
-                                )),
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              icon: const Icon(
+                                Icons.email,
+                                color: Colors.black,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(255, 9, 56, 95)),
+                              ),
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter valid email';
@@ -105,6 +116,16 @@ class _LoginPageState extends State<LoginPage> {
                               icon: const Icon(
                                 Icons.security_outlined,
                                 color: Colors.black,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(255, 9, 56, 95)),
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(_isObscure
@@ -174,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.only(top: 8.0),
                         child: Text("No account yet? Sign up now!"),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

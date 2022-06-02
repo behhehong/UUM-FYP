@@ -59,7 +59,7 @@ class _ProfileState extends State<Profile> {
                     children: [
                       const Text(
                         "First Name",
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.bold),
@@ -70,7 +70,7 @@ class _ProfileState extends State<Profile> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             borderRadius: const BorderRadius.all(
-                              const Radius.circular(5),
+                              Radius.circular(5),
                             )),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8.0),
@@ -114,7 +114,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        "Email Name",
+                        "Email Address",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,

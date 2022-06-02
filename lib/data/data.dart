@@ -1,7 +1,8 @@
 import '../models/questionmodel.dart';
 
+List<QuestionModel> questions = <QuestionModel>[];
+
 List<QuestionModel> getQuestion() {
-  List<QuestionModel> questions = <QuestionModel>[];
   QuestionModel questionModel = QuestionModel(
     question: '',
     answer: '',

@@ -61,12 +61,7 @@ class _SurveyState extends State<Survey> {
                 icon: Icons.history_edu,
                 text: 'Surveys',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Survey(user: widget.user,),
-                    ),
-                  );
+                  Navigator.of(context).pop();
                 },
               ),
               createDrawerItem(
@@ -165,7 +160,8 @@ class _SurveyState extends State<Survey> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Survey1(user: widget.user)));
+                                      builder: (context) =>
+                                          Survey1(user: widget.user)));
                             },
                             icon:
                                 const Icon(Icons.keyboard_arrow_right_outlined),

@@ -31,7 +31,7 @@ class _Survey1State extends State<Survey1> {
                   Column(mainAxisAlignment: MainAxisAlignment.end, children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Welcome to Test Awareness 1",
+                  child: Text("Welcome to Survey Awareness 1",
                       style: GoogleFonts.roboto(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,

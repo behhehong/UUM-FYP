@@ -12,11 +12,11 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController firstNameController = new TextEditingController();
-  TextEditingController lastNameController = new TextEditingController();
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  TextEditingController cpasswordController = new TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController cpasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "Create Account",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 40, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -48,16 +48,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 50.0),
                     child: Container(
-                        color: Colors.white,
                         child: TextField(
-                          controller: firstNameController,
-                          decoration: const InputDecoration(
-                              labelText: "First Name",
-                              icon: const Icon(
-                                Icons.person,
-                                color: Colors.black,
-                              )),
-                        )),
+                      controller: firstNameController,
+                      decoration: const InputDecoration(
+                          labelText: "First Name",
+                          icon: const Icon(
+                            Icons.person,
+                            color: Colors.black,
+                          )),
+                    )),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
@@ -119,7 +118,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
-                    child: Row(
+                       child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         MaterialButton(
