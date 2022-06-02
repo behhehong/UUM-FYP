@@ -14,15 +14,7 @@ class Result extends StatefulWidget {
       notAttempted = 0;
   final User user;
 
-  Result(
-      {Key? key,
-      required this.score,
-      required this.totalQuestion,
-      required this.correct,
-      required this.incorrect,
-      required this.notAttempted,
-      required this.user})
-      : super(key: key);
+  Result({Key? key, required this.user}) : super(key: key);
 
   @override
   _ResultState createState() => _ResultState();
@@ -115,7 +107,8 @@ class _ResultState extends State<Result> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Survey1(user: widget.user)));
+                                builder: (context) =>
+                                    Survey1(user: widget.user)));
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

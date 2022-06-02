@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/login.dart';
 import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/profile.dart';
+import 'package:flutter_final_year_project/report.dart';
 import 'package:flutter_final_year_project/surveypage.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,22 +19,23 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-            backgroundColor: const Color(0xFF1565C0),
-            title: const Text('Home Page'),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(user: widget.user),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.person),
-              )
-            ]),
+          backgroundColor: const Color(0xFF1565C0),
+          title: const Text('Home Page'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Profile(user: widget.user),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.person),
+            )
+          ],
+        ),
         drawer: Drawer(
           child: ListView(
             children: [
@@ -81,6 +83,20 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Profile(user: widget.user),
+                    ),
+                  );
+                },
+              ),
+              createDrawerItem(
+                icon: Icons.assignment,
+                text: 'Report',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Report(
+                        user: widget.user,
+                      ),
                     ),
                   );
                 },
