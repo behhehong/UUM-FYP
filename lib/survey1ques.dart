@@ -261,7 +261,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
                         }
                       }
                       if (index == _questions.length - 1) {
-                        setState(() async {
+                        setState(() {
                           buttonText = "Submit";
                         });
                       }
@@ -325,7 +325,7 @@ class _Survey1QuesState extends State<Survey1Ques> {
     });
   }
 
-  passedtoResult(BuildContext context) async {
+  passedtoResult(BuildContext context) {
     // set up the buttons
     Widget continueButton = TextButton(
       child: const Text("Yes"),
