@@ -1,14 +1,12 @@
 import '../models/questionmodel.dart';
 
-List<QuestionModel> questions = <QuestionModel>[];
-
 List<QuestionModel> getQuestion() {
-  QuestionModel questionModel = QuestionModel(
-    question: '',
-    answer: '',
-  );
+  List<QuestionModel> questions = <QuestionModel>[];
+  QuestionModel questionModel = QuestionModel(question: '', answer: '');
 
   //1
+  // questionModel.setQuestion("Password doesn't follow keyboard pattern");
+  // questionModel.setAnswer("Agree");
   questionModel = QuestionModel(
       question: "Password doesn't follow keyboard pattern", answer: 'Agree');
   questions.add(questionModel);

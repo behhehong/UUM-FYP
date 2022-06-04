@@ -148,7 +148,7 @@ class _SurveyState extends State<Survey> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                      "${_questions.length} Questions | ${_questions.length * 20} Marks",
+                                      "${_questions.length} Questions | ${_questions.length * 5} Marks",
                                       style: const TextStyle(
                                           color: Colors.grey, fontSize: 15)),
                                 )
