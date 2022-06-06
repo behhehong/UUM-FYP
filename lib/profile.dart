@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/homepage.dart';
 import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/surveypage.dart';
 import 'package:flutter_final_year_project/data/data.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class Profile extends StatefulWidget {
   final User user;
@@ -13,6 +17,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  var _image;
+  String pathAsset = "assets/images/profilepic.png";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,17 +34,30 @@ class _ProfileState extends State<Profile> {
             children: [
               const SizedBox(height: 50),
               Center(
-                child: Container(
-                  height: 150,
-                  width: 150,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          "https://cdna.artstation.com/p/assets/images/images/033/435/166/medium/rishav-gupta-naruto.jpg?1609603275"),
-                      fit: BoxFit.cover,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      height: 150,
+                      width: 150,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: _image == null
+                          ? Image.asset(pathAsset)
+                          : Image.file(_image, fit: BoxFit.fill),
                     ),
-                  ),
+                    Positioned(
+                      bottom: 20.0,
+                      right: 20.0,
+                      child: InkWell(
+                        onTap: () {
+                          _showPickOptionsDialog();
+                        },
+                        child: const Icon(Icons.camera_alt,
+                            color: Color(0xFF919191), size: 28.0),
+                      ),
+                    )
+                  ],
                 ),
               ),
               const SizedBox(height: 15),
@@ -78,8 +98,8 @@ class _ProfileState extends State<Profile> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               widget.user.first_name.toString(),
-                              style:
-                                  const TextStyle(color: Colors.black, fontSize: 15),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ),
@@ -106,8 +126,8 @@ class _ProfileState extends State<Profile> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               widget.user.last_name.toString(),
-                              style:
-                                  const TextStyle(color: Colors.black, fontSize: 15),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ),
@@ -158,5 +178,91 @@ class _ProfileState extends State<Profile> {
             ],
           ))),
     );
+  }
+
+  _showPickOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(
+                Icons.photo_library,
+                color: Colors.blue,
+              ),
+              title: const Text("Pick from Gallery"),
+              onTap: () {
+                Navigator.of(context).pop();
+                _galleryPicker;
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.photo_camera,
+                color: Colors.blue,
+              ),
+              title: const Text("Take a Picture"),
+              onTap: () {
+                Navigator.of(context).pop();
+                _cameraPicker;
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _galleryPicker() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 800,
+      maxWidth: 800,
+    );
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      _cropImage();
+    }
+  }
+
+  _cameraPicker() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 800,
+      maxWidth: 800,
+    );
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      _cropImage();
+    }
+  }
+
+  Future<void> _cropImage() async {
+    File? croppedFile = await ImageCropper().cropImage(
+        sourcePath: _image!.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: const AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: const IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
+    if (croppedFile != null) {
+      _image = croppedFile;
+      setState(() {});
+    }
   }
 }

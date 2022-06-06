@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_final_year_project/changePass.dart';
 import 'package:flutter_final_year_project/login.dart';
 import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/profile.dart';
@@ -101,11 +102,18 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-              // createDrawerItem(
-              //   icon: Icons.settings,
-              //   text: 'Settings',
-              //   onTap: () {},
-              // ),
+              createDrawerItem(
+                icon: Icons.lock,
+                text: 'Change Password',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChangePass(user: widget.user),
+                    ),
+                  );
+                },
+              ),
               createDrawerItem(
                 icon: Icons.logout,
                 text: 'Logout',

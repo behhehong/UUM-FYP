@@ -180,10 +180,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(
-                        onTap: () {
-                          // _forgotPassword();
-                        },
-                        child: const Text("Forget Password?")),
+                        onTap: _forgotPassword,
+                        child: const Text("Forget Password")),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -287,5 +285,98 @@ class _LoginPageState extends State<LoginPage> {
         }
       });
     }
+  }
+
+  void _forgotPassword() {
+    TextEditingController _useremailController = TextEditingController();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const Text("Forgot Your Password?"),
+              content: SizedBox(
+                  height: 90,
+                  child: Column(children: [
+                    TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _useremailController,
+                        decoration: const InputDecoration(
+                            labelText: 'Email', icon: Icon(Icons.email))),
+                  ])),
+              actions: [
+                TextButton(
+                  child: const Text("Submit"),
+                  onPressed: () {
+                    _resetPassword(_useremailController.text);
+                  },
+                ),
+                TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })
+              ]);
+        });
+  }
+
+  void _resetPassword(String userEmail) {
+    http.post(
+        Uri.parse("https://hubbuddies.com/271513/cyberform/php/resetuser.php"),
+        body: {
+          // "firstName": ,
+          //"lastName": lastName,
+          "email": userEmail,
+          //"phoneNumber": phoneNumber,
+          //"password": password
+        }).then((respone) {
+      print(respone.body);
+      if (respone.body == "success") {
+        Fluttertoast.showToast(
+          msg: "Reset Done! Please check your email !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (content) => const LoginPage()));
+      } else if (respone.body == "reset failed") {
+        Fluttertoast.showToast(
+          msg: "Reset Failed !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (content) => const LoginPage()));
+      } else if (respone.body == "no user") {
+        Fluttertoast.showToast(
+          msg: "This user not found",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (content) => const LoginPage()));
+      } else {
+        Fluttertoast.showToast(
+          msg: "Failed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
+      }
+    });
   }
 }
