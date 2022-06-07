@@ -36,23 +36,21 @@ class _ProfileState extends State<Profile> {
               Center(
                 child: Stack(
                   children: <Widget>[
-                    Container(
-                      height: 150,
-                      width: 150,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
+                    CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 70,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: _image == null
+                            ? Image.asset(pathAsset)
+                            : Image.file(_image),
                       ),
-                      child: _image == null
-                          ? Image.asset(pathAsset)
-                          : Image.file(_image, fit: BoxFit.fill),
                     ),
                     Positioned(
                       bottom: 20.0,
                       right: 20.0,
                       child: InkWell(
-                        onTap: () {
-                          _showPickOptionsDialog();
-                        },
+                        onTap: () => {_showPickOptionsDialog()},
                         child: const Icon(Icons.camera_alt,
                             color: Color(0xFF919191), size: 28.0),
                       ),
@@ -180,7 +178,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  _showPickOptionsDialog() {
+    _showPickOptionsDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -193,20 +191,17 @@ class _ProfileState extends State<Profile> {
                 color: Colors.blue,
               ),
               title: const Text("Pick from Gallery"),
-              onTap: () {
-                Navigator.of(context).pop();
-                _galleryPicker;
+              onTap: () => {
+                Navigator.of(context).pop(),
+                _galleryPicker(),
               },
             ),
             ListTile(
-              leading: const Icon(
-                Icons.photo_camera,
-                color: Colors.blue,
-              ),
+              leading: const Icon(Icons.photo_camera, color: Colors.blue),
               title: const Text("Take a Picture"),
-              onTap: () {
-                Navigator.of(context).pop();
-                _cameraPicker;
+              onTap: () => {
+                Navigator.of(context).pop(),
+                _cameraPicker(),
               },
             )
           ],
