@@ -18,6 +18,7 @@ class Survey extends StatefulWidget {
 
 class _SurveyState extends State<Survey> {
   List<QuestionModel> _questions = <QuestionModel>[];
+  String pathAsset = 'assets/images/profilepic.png';
 
   @override
   void initState() {
@@ -32,73 +33,6 @@ class _SurveyState extends State<Survey> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF1565C0),
           title: const Text('Surveys'),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                decoration: const BoxDecoration(color: Color(0xFF1565C0)),
-                accountName: Text("${widget.user.last_name.toString()} "
-                    " ${widget.user.first_name.toString()}"),
-                accountEmail: Text(widget.user.email.toString()),
-                currentAccountPicture: const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://cdna.artstation.com/p/assets/images/images/033/435/166/medium/rishav-gupta-naruto.jpg?1609603275'),
-                ),
-              ),
-              createDrawerItem(
-                icon: Icons.home,
-                text: 'Home',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(user: widget.user),
-                    ),
-                  );
-                },
-              ),
-              createDrawerItem(
-                icon: Icons.history_edu,
-                text: 'Surveys',
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              createDrawerItem(
-                icon: Icons.person,
-                text: 'My Profile',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(user: widget.user),
-                    ),
-                  );
-                },
-              ),
-              createDrawerItem(
-                icon: Icons.lock,
-                text: 'Change Password',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChangePass(user: widget.user),
-                    ),
-                  );
-                },
-              ),
-              createDrawerItem(
-                icon: Icons.logout,
-                text: 'Logout',
-                onTap: () {
-                  Navigator.of(context).pop();
-                  logOut(context);
-                },
-              ),
-            ],
-          ),
         ),
         body: SingleChildScrollView(
           child: Padding(

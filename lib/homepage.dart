@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/changePass.dart';
 import 'package:flutter_final_year_project/login.dart';
@@ -15,6 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String pathAsset = 'assets/images/profilepic.png';
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,21 +48,37 @@ class _HomePageState extends State<HomePage> {
                 accountName: Text("${widget.user.last_name.toString()} "
                     " ${widget.user.first_name.toString()}"),
                 accountEmail: Text(widget.user.email.toString()),
-                currentAccountPicture: const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://cdna.artstation.com/p/assets/images/images/033/435/166/medium/rishav-gupta-naruto.jpg?1609603275'),
+                currentAccountPicture: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.all(Radius.circular(100.0)),
+                    border: Border.all(
+                      color: Colors.transparent,
+                      width: 4.0,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: widget.user.user_Id.toString() == 'null'
+                          ? Image.asset(pathAsset)
+                          : CachedNetworkImage(
+                              imageUrl:
+                                  "https://hubbuddies.com/271513/myTutor/assets/profilepic/" +
+                                      widget.user.user_Id.toString() +
+                                      '.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ),
                 ),
               ),
               createDrawerItem(
                 icon: Icons.home,
                 text: 'Home',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(user: widget.user),
-                    ),
-                  );
+                  Navigator.of(context).pop();
                 },
               ),
               createDrawerItem(
@@ -88,20 +107,20 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-              createDrawerItem(
-                icon: Icons.assignment,
-                text: 'Report',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Report(
-                        user: widget.user,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              // createDrawerItem(
+              //   icon: Icons.assignment,
+              //   text: 'Report',
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => Report(
+              //           user: widget.user,
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
               createDrawerItem(
                 icon: Icons.lock,
                 text: 'Change Password',

@@ -1,12 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_final_year_project/editProfile.dart';
 import 'package:flutter_final_year_project/homepage.dart';
 import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/surveypage.dart';
 import 'package:flutter_final_year_project/data/data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
   final User user;
@@ -19,6 +24,31 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   var _image;
   String pathAsset = "assets/images/profilepic.png";
+  var defaultImageUrl;
+
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+
+  late int genderId;
+  late int locationId;
+
+  String dropdownvalue = 'UPSR';
+  var items = [
+    'UPSR',
+    'SPM',
+    'Diploma/A-level/STPM/Foundation/Matriculation',
+    'Degree',
+    'Master',
+    'PHD',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    genderId = 1;
+    locationId = 1;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,236 +58,189 @@ class _ProfileState extends State<Profile> {
             backgroundColor: const Color(0xFF1565C0),
             title: const Text('Profile'),
             centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EditProfile()));
+                },
+                icon: Icon(Icons.edit),
+              )
+            ],
           ),
+          resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
-              child: Column(
-            children: [
-              const SizedBox(height: 50),
-              Center(
-                child: Stack(
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 70,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: _image == null
-                            ? Image.asset(pathAsset)
-                            : Image.file(_image),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 20.0,
-                      right: 20.0,
-                      child: InkWell(
-                        onTap: () => {_showPickOptionsDialog()},
-                        child: const Icon(Icons.camera_alt,
-                            color: Color(0xFF919191), size: 28.0),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-              Text(
-                "${widget.user.last_name.toString()} "
-                " ${widget.user.first_name.toString()}",
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "First Name",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.user.first_name.toString(),
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Last Name",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.user.last_name.toString(),
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Email Address",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
-                            )),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  widget.user.email.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 15),
+              child: Container(
+            color: Colors.blue,
+            height: 950,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              width: 130,
+                              height: 130,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100.0)),
+                                // border: Border.all(
+                                //   color: Colors.white,
+                                //   width: 4.0,
+                                // ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child:
+                                      widget.user.user_Id.toString() == 'null'
+                                          ? Image.asset(pathAsset)
+                                          : CachedNetworkImage(
+                                              imageUrl:
+                                                  "https://hubbuddies.com/271513/myTutor/assets/profilepic/" +
+                                                      widget.user.user_Id
+                                                          .toString() +
+                                                      '.jpg',
+                                            ),
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.edit, size: 20),
-                            ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            "${widget.user.last_name.toString()} "
+                            " ${widget.user.first_name.toString()}",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                    ),
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _userInfo(
+                                  context,
+                                  Icons.person,
+                                  "First Name",
+                                  widget.user.first_name.toString(),
+                                ),
+                                _userInfo(
+                                  context,
+                                  Icons.person,
+                                  "Last Name",
+                                  widget.user.last_name.toString(),
+                                ),
+                                _userInfo(
+                                  context,
+                                  Icons.email,
+                                  "Email Address",
+                                  widget.user.email.toString(),
+                                ),
+                                _userInfo(
+                                  context,
+                                  Icons.numbers,
+                                  "Age",
+                                  widget.user.age.toString(),
+                                ),
+                                _userInfo(
+                                  context,
+                                  Icons.person,
+                                  "Gender",
+                                  widget.user.gender.toString(),
+                                ),
+                                _userInfo(
+                                  context,
+                                  Icons.home,
+                                  "Location",
+                                  widget.user.location.toString(),
+                                ),
+                                _userInfo(
+                                  context,
+                                  Icons.school,
+                                  "Education Level",
+                                  widget.user.education.toString(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ))),
     );
   }
 
-    _showPickOptionsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: const Icon(
-                Icons.photo_library,
-                color: Colors.blue,
-              ),
-              title: const Text("Pick from Gallery"),
-              onTap: () => {
-                Navigator.of(context).pop(),
-                _galleryPicker(),
-              },
+  Column _userInfo(BuildContext context, logo, text, details) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(logo),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
             ),
-            ListTile(
-              leading: const Icon(Icons.photo_camera, color: Colors.blue),
-              title: const Text("Take a Picture"),
-              onTap: () => {
-                Navigator.of(context).pop(),
-                _cameraPicker(),
-              },
-            )
           ],
         ),
-      ),
+        Container(
+          height: 40,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.transparent),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 34.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                details,
+                style: const TextStyle(color: Colors.black, fontSize: 15),
+              ),
+            ),
+          ),
+        ),
+        const Divider(
+          thickness: 1,
+          height: 30,
+          color: Colors.grey,
+        )
+      ],
     );
-  }
-
-  _galleryPicker() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 800,
-      maxWidth: 800,
-    );
-    if (pickedFile != null) {
-      _image = File(pickedFile.path);
-      _cropImage();
-    }
-  }
-
-  _cameraPicker() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.camera,
-      maxHeight: 800,
-      maxWidth: 800,
-    );
-    if (pickedFile != null) {
-      _image = File(pickedFile.path);
-      _cropImage();
-    }
-  }
-
-  Future<void> _cropImage() async {
-    File? croppedFile = await ImageCropper().cropImage(
-        sourcePath: _image!.path,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ],
-        androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        iosUiSettings: const IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ));
-    if (croppedFile != null) {
-      _image = croppedFile;
-      setState(() {});
-    }
   }
 }
