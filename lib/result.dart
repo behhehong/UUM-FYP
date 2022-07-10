@@ -1,59 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_final_year_project/data/data.dart';
+import 'package:flutter_final_year_project/models/questionmodel.dart';
+import 'package:flutter_final_year_project/models/results.dart';
 import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/survey1.dart';
 import 'package:flutter_final_year_project/survey1ques.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import 'homepage.dart';
 
-class Result extends StatefulWidget {
-  int score = 0,
-      totalQuestion = 0,
-      correct = 0,
-      incorrect = 0,
-      notAttempted = 0;
+class ResultPage extends StatefulWidget {
   final User user;
 
-  Result(
-      {Key? key,
-      required this.user,
-      required this.score,
-      required this.totalQuestion,
-      required this.correct,
-      required this.incorrect,
-      required this.notAttempted})
-      : super(key: key);
+  const ResultPage({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
-  _ResultState createState() => _ResultState();
+  _ResultPageState createState() => _ResultPageState();
 }
 
-class _ResultState extends State<Result> {
-  String greeting = "";
-  String comment = "";
+class _ResultPageState extends State<ResultPage> {
+  List<QuestionModel> _questions = <QuestionModel>[];
+  List<Results> resultList = <Results>[];
+  int index = 0;
 
   @override
   void initState() {
     super.initState();
-
-    var percentage = (widget.score / (widget.totalQuestion * 5)) * 100;
-    if (percentage >= 76) {
-      greeting = "HIGH";
-      comment =
-          "You are aware of security threats and how to mitigate them. You have the knowledge of security standards and policies and also apply them.";
-    } else if (percentage >= 51 && percentage < 76) {
-      greeting = "AVERAGE";
-      comment =
-          "You are aware of security threats, have the knowledge of security policies and standards but do not apply them.";
-    } else if (percentage >= 25 && percentage < 51) {
-      greeting = "BELOW AVERAGE";
-      comment =
-          "You are aware of security threats but have no knowledge of security standards and policies and also do not take any measures against them or take part in activities that put you at risk.";
-    } else if (percentage < 25) {
-      greeting = "LOW";
-      comment =
-          "You are not aware of security threats and policies and can easily be exploited by the activities you took part in.";
-    }
+    _questions = getQuestion();
+    _loadResult();
   }
 
   @override
@@ -105,14 +85,16 @@ class _ResultState extends State<Result> {
                           ),
                         ),
                         const SizedBox(height: 50),
-                        Text("Awareness score: $greeting",
+                        Text(
+                            "Awareness score: ${resultList[index].survey_rating!}",
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 25,
-                                fontWeight: FontWeight.bold)),
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center),
                         const SizedBox(height: 20),
                         Text(
-                          "You score ${widget.score} out of ${widget.totalQuestion * 5}",
+                          "You score ${resultList[index].survey_score!} out of ${_questions.length * 5}",
                           style: const TextStyle(
                               color: Colors.black,
                               fontSize: 15,
@@ -120,7 +102,7 @@ class _ResultState extends State<Result> {
                         ),
                         const SizedBox(height: 15),
                         Text(
-                          "${widget.correct} Correct, ${widget.incorrect} Incorrect & ${widget.notAttempted} Not Attempted out of ${widget.totalQuestion}",
+                          "${resultList[index].question_correct!} Correct, ${resultList[index].question_incorrect!} Incorrect & ${resultList[index].question_notattempt!} Not Attempted out of ${_questions.length}",
                           style: const TextStyle(
                               color: Colors.black,
                               fontSize: 15,
@@ -147,7 +129,7 @@ class _ResultState extends State<Result> {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(24),
-                              color: const Color(0xFF1565C0),
+                              color: Color.fromARGB(255, 21, 101, 192),
                             ),
                           ),
                         ),
@@ -193,7 +175,7 @@ class _ResultState extends State<Result> {
         return AlertDialog(
           title: const Text('Comments',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          content: Text(comment,
+          content: Text(resultList[index].survey_desc!,
               style:
                   const TextStyle(fontWeight: FontWeight.w400, fontSize: 15)),
           actions: [
@@ -210,5 +192,43 @@ class _ResultState extends State<Result> {
         );
       },
     );
+  }
+
+  void _loadResult() {
+    http.post(
+        Uri.parse(
+            "https://hubbuddies.com/271513/cyberform/php/load_result.php"),
+        body: {
+          "email": widget.user.email,
+        }).then((response) {
+      var data = jsonDecode(response.body);
+      print(response.body);
+      print(response.statusCode);
+      if (response.statusCode == 200 && data['status'] == 'success') {
+        print("Success");
+        var extractdata = data['data'];
+
+        if (extractdata['results'] != null) {
+          resultList = <Results>[];
+          extractdata['results'].forEach((v) {
+            resultList.add(Results.fromJson(v));
+          });
+        }
+        print(resultList.length);
+
+        setState(() {
+          index = resultList.length - 1;
+          // userId = userList[0].user_Id!;
+          // firstName = userList[0].first_name!;
+          // lastName = userList[0].last_name!;
+          // age = userList[0].age!;
+          // gender = userList[0].gender!;
+          // location = userList[0].location!;
+          // education = userList[0].education!;
+        });
+      } else {
+        print("Failed");
+      }
+    });
   }
 }

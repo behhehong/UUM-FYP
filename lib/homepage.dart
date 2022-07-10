@@ -63,11 +63,10 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.cover,
                       child: widget.user.user_Id.toString() == 'null'
                           ? Image.asset(pathAsset)
-                          : CachedNetworkImage(
-                              imageUrl:
-                                  "https://hubbuddies.com/271513/myTutor/assets/profilepic/" +
-                                      widget.user.user_Id.toString() +
-                                      '.jpg',
+                          : Image.network(
+                              "https://hubbuddies.com/271513/cyberform/assets/images/profilepic/" +
+                                  widget.user.user_Id.toString() +
+                                  '.jpg',
                               fit: BoxFit.cover,
                             ),
                     ),

@@ -19,7 +19,6 @@ class User {
       this.location,
       this.education,
       this.email,
-      this.password,
       this.datereg});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -31,7 +30,6 @@ class User {
     location = json['location'];
     education = json['education'];
     email = json['email'];
-    password = json['password'];
     datereg = json['datereg'];
   }
 
@@ -45,7 +43,6 @@ class User {
     data['location'] = location;
     data['education'] = education;
     data['email'] = email;
-    data['password'] = password;
     data['datereg'] = datereg;
     return data;
   }

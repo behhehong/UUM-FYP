@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_final_year_project/models/questionmodel.dart';
 import 'package:flutter_final_year_project/models/user.dart';
 import 'package:flutter_final_year_project/result.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:http/http.dart' as http;
 
 import 'data/data.dart';
 
@@ -29,6 +33,8 @@ class _Survey1QuesState extends State<Survey1Ques> {
       wrong = 0,
       missed = 0;
   var buttonText = "Next";
+  String rating = "";
+  String comment = "";
 
   @override
   void initState() {
@@ -326,29 +332,63 @@ class _Survey1QuesState extends State<Survey1Ques> {
   }
 
   passedtoResult(BuildContext context) {
+    var percentage = (points / (_questions.length * 5)) * 100;
+    if (percentage >= 76) {
+      rating = "HIGH";
+      comment =
+          "You are aware of security threats and how to mitigate them. You have the knowledge of security standards and policies and also apply them.";
+    } else if (percentage >= 51 && percentage < 76) {
+      rating = "AVERAGE";
+      comment =
+          "You are aware of security threats, have the knowledge of security policies and standards but do not apply them.";
+    } else if (percentage >= 25 && percentage < 51) {
+      rating = "BELOW AVERAGE";
+      comment =
+          "You are aware of security threats but have no knowledge of security standards and policies and also do not take any measures against them or take part in activities that put you at risk.";
+    } else if (percentage < 25) {
+      rating = "LOW";
+      comment =
+          "You are not aware of security threats and policies and can easily be exploited by the activities you took part in.";
+    }
     // set up the buttons
     Widget continueButton = TextButton(
       child: const Text("Yes"),
       onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Result(
-              score: points,
-              totalQuestion: _questions.length,
-              correct: correct,
-              incorrect: incorrect,
-              notAttempted: notAttempted,
-              user: widget.user,
-            ),
-          ),
-        );
+        _insertResult();
       },
     );
 
     Widget cancelButton = TextButton(
       child: const Text("No"),
       onPressed: () {
+        setState(() {
+          if (index == 0) {
+          } else if (right == 1) {
+            setState(() {
+              correct--;
+              groupValue = 0;
+              right = 0;
+              wrong = 0;
+              missed = 0;
+            });
+          } else if (wrong == 1) {
+            setState(() {
+              incorrect--;
+              groupValue = 0;
+              right = 0;
+              wrong = 0;
+              missed = 0;
+            });
+          } else {
+            setState(() {
+              notAttempted--;
+              groupValue = 0;
+              right = 0;
+              wrong = 0;
+              missed = 0;
+            });
+          }
+        });
         Navigator.of(context).pop();
       },
     );
@@ -364,10 +404,49 @@ class _Survey1QuesState extends State<Survey1Ques> {
 
     // show the dialog
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return alert;
       },
     );
+  }
+
+  void _insertResult() {
+    http.post(
+        Uri.parse(
+            "https://hubbuddies.com/271513/cyberform/php/insert_result.php"),
+        body: {
+          "userid": widget.user.user_Id,
+          "email": widget.user.email.toString(),
+          "correct": correct.toString(),
+          "incorrect": incorrect.toString(),
+          "notattempt": notAttempted.toString(),
+          "score": points.toString(),
+          "rating": rating,
+          "comment": comment,
+        }).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        return http.Response(
+            'Error', 408); // Request Timeout response status code
+      },
+    ).then((response) {
+      var jsondata = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        print("Success");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultPage(
+              user: widget.user,
+            ),
+          ),
+        );
+      } else {
+        print("Failed");
+      }
+    });
   }
 }

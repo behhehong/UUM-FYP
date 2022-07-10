@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_final_year_project/models/user.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class EditProfile extends StatefulWidget {
-  EditProfile({Key? key}) : super(key: key);
+  final User user;
+  EditProfile({Key? key, required this.user}) : super(key: key);
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -16,9 +20,11 @@ class _EditProfileState extends State<EditProfile> {
   var _image;
   String pathAsset = "assets/images/profilepic.png";
 
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _ageController = TextEditingController();
+  late final TextEditingController _firstNameController =
+      TextEditingController(text: widget.user.first_name);
+  late final TextEditingController _lastNameController =
+      TextEditingController(text: widget.user.last_name);
+  final TextEditingController _ageController = TextEditingController();
 
   late int genderId;
   late int locationId;
@@ -64,7 +70,8 @@ class _EditProfileState extends State<EditProfile> {
                         height: 130,
                         decoration: BoxDecoration(
                           color: Colors.transparent,
-                          borderRadius: BorderRadius.all(Radius.circular(100.0)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(100.0)),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
@@ -101,6 +108,7 @@ class _EditProfileState extends State<EditProfile> {
                 const SizedBox(height: 5),
                 TextFormField(
                   keyboardType: TextInputType.text,
+                  controller: _firstNameController,
                   textAlign: TextAlign.left,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
@@ -115,8 +123,8 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                      borderSide:
-                          const BorderSide(color: Color.fromARGB(255, 9, 56, 95)),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 9, 56, 95)),
                     ),
                   ),
                 ),
@@ -131,6 +139,7 @@ class _EditProfileState extends State<EditProfile> {
                 const SizedBox(height: 5),
                 TextFormField(
                   keyboardType: TextInputType.text,
+                  controller: _lastNameController,
                   textAlign: TextAlign.left,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
@@ -145,8 +154,8 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                      borderSide:
-                          const BorderSide(color: Color.fromARGB(255, 9, 56, 95)),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 9, 56, 95)),
                     ),
                   ),
                 ),
@@ -161,6 +170,7 @@ class _EditProfileState extends State<EditProfile> {
                 const SizedBox(height: 5),
                 TextFormField(
                   keyboardType: TextInputType.number,
+                  controller: _ageController,
                   textAlign: TextAlign.left,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
@@ -175,8 +185,8 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                      borderSide:
-                          const BorderSide(color: Color.fromARGB(255, 9, 56, 95)),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 9, 56, 95)),
                     ),
                   ),
                 ),
@@ -464,5 +474,91 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  void _updateProfile() {}
+  void _updateProfile() {
+    String _firstName = _firstNameController.text;
+    String _lastName = _lastNameController.text;
+    String _age = _ageController.text;
+
+    String _gender = "";
+    if (genderId == 1) {
+      setState(() {
+        _gender = "Male";
+      });
+    } else {
+      setState(() {
+        _gender = "Female";
+      });
+    }
+
+    String _location = "";
+    if (locationId == 1) {
+      setState(() {
+        _location = "rural";
+      });
+    } else {
+      setState(() {
+        _location = "urban";
+      });
+    }
+
+    String _education = dropdownvalue.toString();
+    String base64Image = base64Encode(_image!.readAsBytesSync());
+
+    if (_firstName.isNotEmpty &&
+        _lastName.isNotEmpty &&
+        _age.isNotEmpty &&
+        _gender.isNotEmpty &&
+        _location.isNotEmpty &&
+        _education.isNotEmpty) {
+      http.post(
+          Uri.parse(
+              "https://hubbuddies.com/271513/cyberform/php/update_profile.php"),
+          body: {
+            "user_Id": widget.user.user_Id,
+            "email": widget.user.email,
+            "first_name": _firstName,
+            "last_name": _lastName,
+            "age": _age,
+            "gender": _gender.toString(),
+            "location": _location.toString(),
+            "education": _education,
+            "image": base64Image,
+          }).then((response) {
+        print(response.body);
+        print(response.statusCode);
+        var data = jsonDecode(response.body);
+
+        if (response.statusCode == 200 && data['status'] == 'success') {
+          print("Success");
+          Fluttertoast.showToast(
+              msg: "Successfully Update",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0);
+        } else {
+          print("Failed");
+          Fluttertoast.showToast(
+              msg: "Failed to Update",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0);
+        }
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: "Please fill in your information",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0);
+    }
+  }
 }

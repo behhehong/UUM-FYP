@@ -79,13 +79,13 @@ List<QuestionModel> getQuestion() {
   questionModel = QuestionModel(
       question:
           "Never consider any amount of money for services offered by an online site",
-      answer: "Disgree");
+      answer: "Disagree");
   questions.add(questionModel);
 
   //14
   questionModel = QuestionModel(
       question: "Willing to deposit money requested by online friends",
-      answer: "Disgree");
+      answer: "Disagree");
   questions.add(questionModel);
 
   //15
@@ -97,7 +97,7 @@ List<QuestionModel> getQuestion() {
   //16
   questionModel = QuestionModel(
       question: "Trust strangers' pictures posted on the Internet",
-      answer: "Disgree");
+      answer: "Disagree");
   questions.add(questionModel);
 
   //17
@@ -109,7 +109,7 @@ List<QuestionModel> getQuestion() {
   //18
   questionModel = QuestionModel(
       question: "Wouldn't hesitate to face-to-face with Internet friends",
-      answer: "Disgree");
+      answer: "Disagree");
   questions.add(questionModel);
 
   return questions;

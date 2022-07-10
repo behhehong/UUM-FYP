@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_final_year_project/editProfile.dart';
 import 'package:flutter_final_year_project/homepage.dart';
 import 'package:flutter_final_year_project/models/user.dart';
@@ -22,6 +24,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  List<User> userList = <User>[];
   var _image;
   String pathAsset = "assets/images/profilepic.png";
   var defaultImageUrl;
@@ -32,6 +35,13 @@ class _ProfileState extends State<Profile> {
 
   late int genderId;
   late int locationId;
+  String firstName = "",
+      lastName = "",
+      age = "",
+      gender = "",
+      location = "",
+      education = "",
+      userId = "";
 
   String dropdownvalue = 'UPSR';
   var items = [
@@ -48,157 +58,169 @@ class _ProfileState extends State<Profile> {
     super.initState();
     genderId = 1;
     locationId = 1;
+    _loadUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color(0xFF1565C0),
-            title: const Text('Profile'),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditProfile()));
-                },
-                icon: Icon(Icons.edit),
-              )
-            ],
-          ),
-          resizeToAvoidBottomInset: false,
-          body: SingleChildScrollView(
-              child: Container(
-            color: Colors.blue,
-            height: 950,
-            width: double.infinity,
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                      child: Column(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF1565C0),
+          title: const Text('Profile'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditProfile(
+                              user: widget.user,
+                            ))).then((value) => _loadUser());
+              },
+              icon: Icon(Icons.edit),
+            )
+          ],
+        ),
+        resizeToAvoidBottomInset: false,
+        body: FutureBuilder(
+          future: reload(),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return SingleChildScrollView(
+                child: Container(
+                  color: Color.fromRGBO(160, 210, 219, 1),
+                  height: 950,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      Stack(
                         children: [
-                          Center(
-                            child: Container(
-                              width: 130,
-                              height: 130,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(100.0)),
-                                // border: Border.all(
-                                //   color: Colors.white,
-                                //   width: 4.0,
-                                // ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child:
-                                      widget.user.user_Id.toString() == 'null'
-                                          ? Image.asset(pathAsset)
-                                          : CachedNetworkImage(
-                                              imageUrl:
-                                                  "https://hubbuddies.com/271513/myTutor/assets/profilepic/" +
-                                                      widget.user.user_Id
-                                                          .toString() +
-                                                      '.jpg',
-                                            ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Text(
-                            "${widget.user.last_name.toString()} "
-                            " ${widget.user.first_name.toString()}",
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
-                    ),
-                    height: MediaQuery.of(context).size.height,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _userInfo(
-                                  context,
-                                  Icons.person,
-                                  "First Name",
-                                  widget.user.first_name.toString(),
+                                Center(
+                                  child: Container(
+                                    width: 130,
+                                    height: 130,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100.0)),
+                                      // border: Border.all(
+                                      //   color: Colors.white,
+                                      //   width: 4.0,
+                                      // ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: widget.user.user_Id == 'null'
+                                            ? Image.asset(pathAsset)
+                                            : _loadImage(),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                _userInfo(
-                                  context,
-                                  Icons.person,
-                                  "Last Name",
-                                  widget.user.last_name.toString(),
-                                ),
-                                _userInfo(
-                                  context,
-                                  Icons.email,
-                                  "Email Address",
-                                  widget.user.email.toString(),
-                                ),
-                                _userInfo(
-                                  context,
-                                  Icons.numbers,
-                                  "Age",
-                                  widget.user.age.toString(),
-                                ),
-                                _userInfo(
-                                  context,
-                                  Icons.person,
-                                  "Gender",
-                                  widget.user.gender.toString(),
-                                ),
-                                _userInfo(
-                                  context,
-                                  Icons.home,
-                                  "Location",
-                                  widget.user.location.toString(),
-                                ),
-                                _userInfo(
-                                  context,
-                                  Icons.school,
-                                  "Education Level",
-                                  widget.user.education.toString(),
+                                const SizedBox(height: 15),
+                                Text(
+                                  "${widget.user.last_name.toString()} "
+                                  " ${widget.user.first_name.toString()}",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
                           ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                          height: MediaQuery.of(context).size.height,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _userInfo(
+                                        context,
+                                        Icons.person,
+                                        "First Name",
+                                        firstName,
+                                      ),
+                                      _userInfo(
+                                        context,
+                                        Icons.person,
+                                        "Last Name",
+                                        lastName,
+                                      ),
+                                      _userInfo(
+                                        context,
+                                        Icons.email,
+                                        "Email Address",
+                                        widget.user.email,
+                                      ),
+                                      _userInfo(
+                                        context,
+                                        Icons.numbers,
+                                        "Age",
+                                        age,
+                                      ),
+                                      _userInfo(
+                                        context,
+                                        Icons.person,
+                                        "Gender",
+                                        gender,
+                                      ),
+                                      _userInfo(
+                                        context,
+                                        Icons.home,
+                                        "Location",
+                                        location,
+                                      ),
+                                      _userInfo(
+                                        context,
+                                        Icons.school,
+                                        "Education Level",
+                                        education,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ))),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -242,5 +264,60 @@ class _ProfileState extends State<Profile> {
         )
       ],
     );
+  }
+
+  void _loadUser() {
+    http.post(
+        Uri.parse("https://hubbuddies.com/271513/cyberform/php/load_user.php"),
+        body: {
+          "email": widget.user.email,
+        }).then((response) {
+      var data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['status'] == 'success') {
+        print("Success");
+        var extractdata = data['data'];
+
+        if (extractdata['users'] != null) {
+          userList = <User>[];
+          extractdata['users'].forEach((v) {
+            userList.add(User.fromJson(v));
+          });
+        }
+        setState(() {
+          userId = userList[0].user_Id!;
+          firstName = userList[0].first_name!;
+          lastName = userList[0].last_name!;
+          age = userList[0].age!;
+          gender = userList[0].gender!;
+          location = userList[0].location!;
+          education = userList[0].education!;
+        });
+        _loadImage();
+      } else {
+        print("Failed");
+      }
+    });
+  }
+
+  reload() async {
+    String path =
+        "https://hubbuddies.com/271513/cyberform/assets/images/profilepic";
+    File profileImage = File("$path/${widget.user.user_Id.toString()}.jpg");
+
+    if (profileImage.existsSync() == false) {
+      return Text("File Not Found");
+    } else {
+      imageCache.clear();
+      return Image.file(profileImage);
+    }
+  }
+
+  _loadImage() {
+    setState() {}
+    return Image.network(
+        "https://hubbuddies.com/271513/cyberform/assets/images/profilepic/" +
+            widget.user.user_Id.toString() +
+            '.jpg');
   }
 }
