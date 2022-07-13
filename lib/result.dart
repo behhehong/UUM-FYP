@@ -218,13 +218,6 @@ class _ResultPageState extends State<ResultPage> {
 
         setState(() {
           index = resultList.length - 1;
-          // userId = userList[0].user_Id!;
-          // firstName = userList[0].first_name!;
-          // lastName = userList[0].last_name!;
-          // age = userList[0].age!;
-          // gender = userList[0].gender!;
-          // location = userList[0].location!;
-          // education = userList[0].education!;
         });
       } else {
         print("Failed");

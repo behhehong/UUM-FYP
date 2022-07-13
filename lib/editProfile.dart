@@ -62,41 +62,41 @@ class _EditProfileState extends State<EditProfile> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Center(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        width: 130,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(100.0)),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: _image == null
-                                ? Image.asset(pathAsset)
-                                : Image.file(_image),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 20.0,
-                        right: 20.0,
-                        child: InkWell(
-                          onTap: () {
-                            _showPickOptionsDialog();
-                          },
-                          child: const Icon(Icons.camera_alt,
-                              color: Color(0xFF919191), size: 28.0),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // Center(
+                //   child: Stack(
+                //     children: <Widget>[
+                //       Container(
+                //         width: 130,
+                //         height: 130,
+                //         decoration: BoxDecoration(
+                //           color: Colors.transparent,
+                //           borderRadius:
+                //               BorderRadius.all(Radius.circular(100.0)),
+                //         ),
+                //         child: ClipRRect(
+                //           borderRadius: BorderRadius.circular(100),
+                //           child: FittedBox(
+                //             fit: BoxFit.cover,
+                //             child: _image == null
+                //                 ? Image.asset(pathAsset)
+                //                 : Image.file(_image),
+                //           ),
+                //         ),
+                //       ),
+                //       Positioned(
+                //         bottom: 20.0,
+                //         right: 20.0,
+                //         child: InkWell(
+                //           onTap: () {
+                //             _showPickOptionsDialog();
+                //           },
+                //           child: const Icon(Icons.camera_alt,
+                //               color: Color(0xFF919191), size: 28.0),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -502,7 +502,6 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     String _education = dropdownvalue.toString();
-    String base64Image = base64Encode(_image!.readAsBytesSync());
 
     if (_firstName.isNotEmpty &&
         _lastName.isNotEmpty &&
@@ -522,7 +521,6 @@ class _EditProfileState extends State<EditProfile> {
             "gender": _gender.toString(),
             "location": _location.toString(),
             "education": _education,
-            "image": base64Image,
           }).then((response) {
         print(response.body);
         print(response.statusCode);

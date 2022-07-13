@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_final_year_project/editImage.dart';
 import 'package:flutter_final_year_project/editProfile.dart';
 import 'package:flutter_final_year_project/homepage.dart';
 import 'package:flutter_final_year_project/models/user.dart';
@@ -72,12 +73,7 @@ class _ProfileState extends State<Profile> {
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EditProfile(
-                              user: widget.user,
-                            ))).then((value) => _loadUser());
+                _showEditProfileDialog(context);
               },
               icon: Icon(Icons.edit),
             )
@@ -118,7 +114,7 @@ class _ProfileState extends State<Profile> {
                                       borderRadius: BorderRadius.circular(100),
                                       child: FittedBox(
                                         fit: BoxFit.cover,
-                                        child: widget.user.user_Id == 'null'
+                                        child: widget.user.user_Id == null
                                             ? Image.asset(pathAsset)
                                             : _loadImage(),
                                       ),
@@ -319,5 +315,56 @@ class _ProfileState extends State<Profile> {
         "https://hubbuddies.com/271513/cyberform/assets/images/profilepic/" +
             widget.user.user_Id.toString() +
             '.jpg');
+  }
+
+  _showEditProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Profile',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          content: const Text('Which part do you want to edit?',
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15)),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditImage(
+                                  user: widget.user,
+                                ))).then((value) => _loadUser());
+                  },
+                  child: const Text(
+                    'Image',
+                    style: TextStyle(color: Color(0xFF1565C0)),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditProfile(
+                                  user: widget.user,
+                                ))).then((value) => _loadUser());
+                  },
+                  child: const Text(
+                    'Personal info',
+                    style: TextStyle(color: Color(0xFF1565C0)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 }
